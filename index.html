@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enquanto o Mundo Acelera - Leia Agora</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Paleta ATUALIZADA para melhor contraste e estética suave */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: #f3f4f6;
+            scroll-behavior: smooth;
+        }
+        .font-playfair {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Cor de destaque principal (botão) */
+        .text-accent {
+            color: #d97706; /* Mostarda Suave */
+        }
+        .bg-accent {
+            background-color: #d97706; /* Mostarda Suave */
+        }
+        
+        /* Estilos do Conteúdo de Leitura (fundo branco, texto preto) */
+        .chapter-content h2, 
+        .chapter-content h3 {
+            color: #1f2937; 
+            font-weight: 700;
+        }
+        .chapter-content p {
+            color: #374151; 
+            line-height: 1.8;
+            font-size: 1.125rem; 
+        }
+        
+        /* Ajustes menores de layout */
+        .mockup-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 150%; 
+        }
+        .mockup-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
+        }
+
+        /* --- REGRAS DE PROTEÇÃO DE CONTEÚDO --- */
+
+        /* Garantir que o conteúdo de leitura tenha position: relative para o overlay funcionar */
+        #leitura-completa {
+            position: relative; /* FUNDAMENTAL para a marca d'água dinâmica */
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        
+        /* Permite a seleção em elementos interativos */
+        #accordion-segredos button {
+            user-select: auto;
+            -webkit-user-select: auto;
+            -moz-user-select: auto;
+            -ms-user-select: auto;
+        }
+        
+        /* 1. Efeito de blur para dissuasão de screenshots/captura ao mudar de aba */
+        .blurred-content {
+            filter: blur(8px);
+            transition: filter 0.5s ease-in-out;
+        }
+
+        /* 2. Camada de Marca D'água Dinâmica */
+        #watermark-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Permite interagir com o texto por baixo */
+            overflow: hidden;
+            z-index: 10; /* Fica acima do texto, mas abaixo do container de segurança */
+        }
+        .watermark-text {
+            position: absolute;
+            font-size: 20px;
+            color: rgba(217, 119, 6, 0.1); /* Cor de destaque bem transparente */
+            font-weight: bold;
+            opacity: 0.8;
+            user-select: none;
+            -webkit-user-select: none;
+            transform: rotate(-10deg); /* Rotação para efeito de marca d'água */
+            transition: transform 0.1s ease-out; /* Transição suave para o movimento */
+            white-space: nowrap; /* Impede que o texto quebre */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Section: Com a capa do seu livro e CTA -->
+    <header class="relative overflow-hidden min-h-screen flex items-center justify-center p-8 bg-black">
+        <!-- Fundo escuro com uma textura sutil ou gradiente -->
+        <div class="absolute inset-0 bg-gradient-to-br from-gray-900 to-black opacity-90"></div>
+        <div class="absolute inset-0 z-0 bg-cover bg-center opacity-20" style="background-image: url('https://images.unsplash.com/photo-1521737711867-e6792aa67c99?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');"></div> 
+        
+        <div class="relative z-10 flex flex-col md:flex-row items-center max-w-6xl mx-auto gap-12">
+            <!-- Capa do Livro (em um mockup ou estilizada) -->
+            <div class="md:w-1/2 flex justify-center p-4">
+                <div class="relative w-64 md:w-80 lg:w-96 shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                    <img src="imagem/capa do livro.jpg" 
+                         alt="Capa do livro Enquanto o Mundo Acelera" 
+                         class="rounded-lg border-2 border-gray-700 w-full h-auto object-cover">
+                </div>
+            </div>
+
+            <!-- Título e Descrição do Livro (Letras Brancas) -->
+            <div class="md:w-1/2 text-center md:text-left">
+                <!-- Título Principal (Branco/Light Cream) -->
+                <h1 class="font-playfair text-5xl md:text-6xl font-extrabold leading-tight mb-4 text-white">
+                    Enquanto o Mundo Acelera
+                </h1>
+                <!-- Subtítulo (Cinza Suave) -->
+                <p class="text-xl md:text-2xl text-gray-400 italic mb-6">
+                    Um guia simples pra quem está cansado de fingir que está bem
+                </p>
+                <!-- Descrição (Cinza Suave) -->
+                <p class="text-lg text-gray-300 mb-8 max-w-xl mx-auto md:mx-0">
+                    Este livro é para quem se sente perdido, cansado ou sobrecarregado pelo mundo moderno. 
+                    Ele não promete fórmulas mágicas, mas oferece clareza e um caminho para recuperar o silêncio e a consciência de si.
+                </p>
+                <!-- Botão CTA (Dourado Suave) -->
+                <a href="#leitura-completa" class="inline-block bg-accent text-gray-900 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-yellow-700 transition duration-300 text-lg uppercase tracking-wider">
+                    Leia Agora
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content: A leitura do livro (Fundo Branco, Texto Preto) -->
+    <main id="leitura-completa" class="bg-white min-h-screen py-16 px-4 md:px-8 shadow-inner">
+        
+        <!-- CAMADA DE MARCA D'ÁGUA DINÂMICA -->
+        <div id="watermark-overlay"></div> 
+
+        <div class="max-w-3xl mx-auto relative z-20"> <!-- Z-index garante que o conteúdo esteja acima da marca d'água -->
+            
+            <h2 class="text-4xl font-playfair font-bold text-center mb-12 text-gray-900">Início da Jornada</h2>
+
+            <!-- Conteúdo do Livro (Capítulos) -->
+            <section class="chapter-content">
+                <!-- Capítulos serão injetados aqui via JS -->
+            </section>
+
+            <!-- 7 Segredos -->
+            <section id="segredos" class="mt-20 mb-12">
+                <h3 class="text-3xl font-playfair font-bold text-center mb-8 text-gray-900">7 Segredos que o Mundo Não Conta</h3>
+                <p class="text-gray-600 mb-8 text-lg text-center max-w-2xl mx-auto">Estes são os pontos de reflexão direta, atuando como guias práticos para a mudança que começa de dentro.</p>
+                <div id="accordion-segredos" class="space-y-4">
+                    <!-- O acordeão será preenchido via JS -->
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Footer Section (Rodapé de Livro Simples e Autoral) -->
+    <footer class="bg-black py-8 px-4 text-center border-t border-gray-800">
+        <div class="max-w-6xl mx-auto text-gray-400 text-sm">
+            <p class="mb-2">© 2024 Enquanto o Mundo Acelera. Todos os direitos reservados.</p>
+            <p class="mb-2">Uma obra independente e autopublicada para quem busca paz no ritmo acelerado.</p>
+            <!-- NOME DO AUTOR INSERIDO AQUI -->
+            <p class="text-accent font-semibold mt-4">Criação Autoral por Eduardo Dos Reis</p>
+            <p class="text-xs mt-1 text-gray-500">A reprodução não autorizada é estritamente proibida.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Dados do Livro (Conteúdo ajustado para remover os travessões como separadores)
+        const BOOK_DATA = {
+            chapters: [
+                { id: "cap1", title: "1. O silêncio que ninguém ouve", content: "Tem dias em que o corpo está aqui, mas a mente não. Você acorda, levanta, faz tudo o que precisa fazer… mas por dentro parece que nada faz sentido. É como se o mundo estivesse gritando e, mesmo assim, você só ouvisse um vazio. Ninguém ensina a lidar com o cansaço de existir. Falam pra ter fé, pra trabalhar mais, pra pensar positivo mas ninguém fala sobre quando a cabeça trava e o coração parece cheio demais pra sentir qualquer coisa. O mundo de hoje está barulhento demais. São mil vozes, telas, cobranças e comparações. A gente tenta acompanhar tudo, mas quanto mais corre, mais se perde. E quando o silêncio chega aquele momento em que não vem pensamento nenhum muita gente acha que é o fim. Mas esse silêncio é um pedido de ajuda da alma. É a vida pedindo pra você se escutar. O vazio que você sente não é ausência de vida é espaço pra reconstruir. A dor só cala quando você ouve o que ela quer dizer. E o que ela diz é simples: você ainda está vivo. E pode mudar tudo, mesmo que o mundo diga o contrário." },
+                { id: "cap2", title: "2. O mundo quer a sua atenção, não a sua alma", content: "A moeda mais valiosa de hoje não é o dinheiro é a atenção. Tudo disputa o seu olhar, o seu tempo, o seu foco. Cada segundo que você passa olhando uma tela, alguém está lucrando. As empresas descobriram que é mais fácil vender distração do que consciência. E quanto mais você se distrai, menos percebe o que realmente importa. Por isso, você vive cansado, mas continua rolando o celular. Você quer descansar, mas o cérebro está viciado em estímulo. Esse é o novo tipo de prisão: uma prisão com Wi-Fi. O segredo é simples, mas poderoso: quando você escolhe o que quer olhar, o mundo perde o controle sobre você. Desligar um pouco não é perder tempo é recuperar a sua alma." },
+                { id: "cap3", title: "3. O vazio não é o fim é o começo", content: "Sentir que nada faz sentido é assustador, mas também é um sinal de que você está acordando. O vazio chega quando a alma não quer mais viver no automático. A gente tenta preencher esse buraco com qualquer coisa: amizades rápidas, promessas de sucesso, distrações. Mas o vazio não quer ser preenchido ele quer ser entendido. Quando você para de correr e senta com ele, começa a perceber o que realmente te falta. Não é luxo, nem fama, nem aprovação. É paz, direção e verdade. Então, da próxima vez que o vazio aparecer, não fuja. Ele não é seu inimigo é o aviso de que algo precisa mudar." },
+                { id: "cap4", title: "4. A comparação mata o que é real", content: "Comparar-se com os outros é como tentar respirar com o ar do vizinho simplesmente não funciona. O mundo ensina a medir tudo: beleza, sucesso, seguidores, dinheiro. Mas ninguém mede paz, caráter ou clareza. E é por isso que tanta gente parece feliz, mas não dorme bem. Quando você vive se comparando, começa a perder a própria cor. Se esquece de quem é, tenta se moldar, se apaga. Mas a vida só começa a andar quando você aceita o seu ritmo. Ninguém está realmente à frente cada um tem um tempo diferente pra florescer." },
+                { id: "cap5", title: "5. Tempo: o que o sistema te rouba em silêncio", content: "O sistema te ensina a correr atrás de dinheiro. Mas o que ele realmente quer é o seu tempo. Você trabalha o dia todo, chega cansado, e quando finalmente descansa, está exausto demais pra viver. Isso não é vida é sobrevivência. E o pior é que, às vezes, você até tem dinheiro, mas não tem tempo pra aproveitar. A troca é injusta. Por isso, a verdadeira liberdade começa quando você usa o dinheiro pra comprar tempo, e não pra mostrar nada pra ninguém. Trabalhe, sim. Mas lembre: o objetivo nunca foi acumular, foi viver de forma leve e consciente." },
+                { id: "cap6", title: "6. A mudança não começa fora, começa dentro", content: "Muita gente tenta mudar o mundo, mas continua com os mesmos pensamentos, as mesmas reações, os mesmos medos. Nada muda lá fora enquanto dentro tudo continua igual. A mudança real não é gritar, é entender. É olhar pra dentro com sinceridade e dizer: “o que eu preciso soltar?”. Às vezes não é sobre fazer mais é sobre deixar de carregar o que pesa. A vida melhora quando você começa a enxergar diferente. O mundo é o mesmo, mas os olhos mudam." },
+                { id: "cap7", title: "7. Você não está sozinho", content: "Você pode se sentir perdido agora, mas não é o único. Tem muita gente calada, sorrindo por fora e desabando por dentro. Todo mundo tem dias em que duvida de si, em que sente que o futuro é uma névoa e o presente não tem cor. Mas isso não significa que acabou só que você está no meio da travessia. As dores que você sente hoje são o terreno se abrindo pra algo novo. E quando você entende isso, o medo diminui. Você não precisa ser forte o tempo todo. Só precisa continuar mesmo devagar, mesmo em silêncio. Porque, no fim, o que te salva não é a pressa, é a consciência de que ainda há vida dentro de você. E essa vida, mesmo ferida, ainda é capaz de recomeçar." }
+            ],
+            secrets: [
+                "Controle sua atenção, não o contrário: escolher onde olhar é a forma mais poderosa de liberdade.",
+                "Aprenda a dizer não: recuperar tempo e energia é mais importante do que agradar o mundo.",
+                "Valorize silêncio e solidão: quem aprende a ficar sozinho com seus pensamentos encontra clareza.",
+                "O medo é um indicador, não um inimigo: ele sinaliza que você pode sair do automático.",
+                "Não troque tempo por status: sucesso verdadeiro é ter controle sobre seu tempo e sua vida.",
+                "Observe padrões antes de reagir: identificar padrões invisíveis te dá vantagem e liberdade.",
+                "Você não está sozinho, mesmo quando sente: reconhecer isso conecta e fortalece você."
+            ]
+        };
+
+        const chapterContentSection = document.querySelector('.chapter-content');
+        const secretsAccordion = document.getElementById('accordion-segredos');
+        
+        // 1. Inicializa o Conteúdo do Livro
+        function initializeContent() {
+            let contentHTML = '';
+
+            BOOK_DATA.chapters.forEach(chapter => {
+                contentHTML += `<div id="${chapter.id}" class="mb-12 pt-4 border-t border-gray-300">
+                                    <h3 class="text-2xl font-playfair font-bold text-gray-800 mb-4">${chapter.title}</h3>
+                                    ${chapter.content.split('\n').map(p => `<p class="text-gray-700">${p.trim()}</p>`).join('')}
+                                </div>`;
+            });
+
+            chapterContentSection.insertAdjacentHTML('beforeend', contentHTML);
+
+            // Adiciona o acordeão dos segredos
+            BOOK_DATA.secrets.forEach((secret, index) => {
+                // A LÓGICA AGORA USA O DOIS PONTOS SEGUIDO DE ESPAÇO COMO SEPARADOR
+                const parts = secret.split(': ');
+                const title = parts[0];
+                const detail = parts.length > 1 ? parts.slice(1).join(': ') : ''; // Garante que o restante seja o detalhe
+                
+                const itemHTML = `
+                    <div class="rounded-lg shadow-md overflow-hidden bg-white border border-gray-200">
+                        <button class="w-full text-left p-5 flex justify-between items-center text-lg font-semibold text-gray-700 hover:bg-gray-50 transition duration-150 ease-in-out" 
+                                onclick="toggleAccordion(this)">
+                            <span>${index + 1}. ${title}</span>
+                            <span class="transform transition duration-300 ease-in-out text-2xl">+</span>
+                        </button>
+                        <div class="p-5 text-gray-700 hidden border-t border-gray-200 bg-gray-50">
+                            <p>${detail}</p>
+                        </div>
+                    </div>
+                `;
+                secretsAccordion.insertAdjacentHTML('beforeend', itemHTML);
+            });
+        }
+
+        // 2. Funções de Interação (Acordeão)
+        function toggleAccordion(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('span:last-child');
+            
+            // Fecha todos os outros
+            document.querySelectorAll('#accordion-segredos > div > button').forEach(otherButton => {
+                if (otherButton !== button) {
+                    otherButton.nextElementSibling.classList.add('hidden');
+                    otherButton.querySelector('span:last-child').textContent = '+';
+                }
+            });
+
+            // Abre/Fecha o atual
+            content.classList.toggle('hidden');
+            if (content.classList.contains('hidden')) {
+                icon.textContent = '+';
+            } else {
+                icon.textContent = '—'; // Ícone de menos para indicar aberto
+            }
+        }
+
+        // 3. Bloqueio de Teclas de Print/Desenvolvedor/Impressão
+        function blockKeys(e) {
+            const mainContent = document.getElementById('leitura-completa');
+            
+            // 3.1. Bloqueia F12 (Dev Tools)
+            if (e.key === 'F12' || e.keyCode === 123) {
+                e.preventDefault();
+                console.log('F12 (Ferramentas do Desenvolvedor) bloqueado.');
+                return;
+            }
+
+            // 3.2. Bloqueia PrintScreen (PrtSc)
+            if (e.key === 'PrintScreen' || e.keyCode === 44) {
+                e.preventDefault();
+                console.log('Tentativa de PrintScreen bloqueada. Aplicando desfoque momentâneo.');
+                // Aplica o blur por 0.5s para frustrar o print
+                if (mainContent) {
+                    mainContent.classList.add('blurred-content');
+                    setTimeout(() => {
+                        mainContent.classList.remove('blurred-content');
+                    }, 500); 
+                }
+            }
+
+            // 3.3. Bloqueia atalhos comuns de cópia/impressão (Ctrl/Cmd)
+            if ((e.ctrlKey || e.metaKey)) { // Ctrl no Windows, Cmd no Mac
+                // Ctrl+C (Copy), Ctrl+U (View Source), Ctrl+P (Print)
+                // Ctrl+Shift+I (Inspect), Ctrl+Shift+J (Console)
+                if (e.key === 'c' || e.key === 'C' || e.key === 'u' || e.key === 'U' || e.key === 'p' || e.key === 'P' || 
+                    (e.shiftKey && (e.key === 'i' || e.key === 'I' || e.key === 'j' || e.key === 'J'))) {
+                    e.preventDefault();
+                    console.log('Tentativa de cópia/impressão bloqueada.');
+                }
+            }
+        }
+        
+        // 4. Marca D'água Dinâmica (Obfuscamento Visual)
+        function setupWatermark() {
+            const watermarkOverlay = document.getElementById('watermark-overlay');
+            const watermarkText = "PROIBIDA A CÓPIA NÃO AUTORIZADA"; 
+            const numWatermarks = 15; // Número de marcas a serem geradas
+
+            if (!watermarkOverlay) return;
+            
+            watermarkOverlay.innerHTML = ''; // Limpa o container
+
+            // Gera várias instâncias da marca d'água
+            for (let i = 0; i < numWatermarks; i++) {
+                const span = document.createElement('span');
+                span.className = 'watermark-text';
+                span.textContent = watermarkText;
+
+                // Posição aleatória inicial
+                span.style.left = `${(i % 5) * 20 + 5 + Math.random() * 5}%`;
+                span.style.top = `${Math.floor(i / 5) * 20 + 5 + Math.random() * 5}%`;
+
+                watermarkOverlay.appendChild(span);
+            }
+            
+            // Faz a marca d'água se mover levemente com o mouse
+            document.addEventListener('mousemove', (e) => {
+                const rect = watermarkOverlay.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                // Normaliza as coordenadas do mouse para um range de 0 a 1
+                const normalizedX = x / rect.width;
+                const normalizedY = y / rect.height;
+                
+                // Movimento proporcional ao mouse (efeito de paralaxe leve)
+                // moveX e moveY variam de -10 a 10
+                const moveX = (normalizedX - 0.5) * 20; 
+                const moveY = (normalizedY - 0.5) * 20; 
+                
+                watermarkOverlay.querySelectorAll('.watermark-text').forEach((span, index) => {
+                    // Aplica um pequeno deslocamento baseado no mouse
+                    span.style.transform = `rotate(-10deg) translate(${moveX * 0.7}px, ${moveY * 0.7}px)`;
+                });
+            });
+        }
+
+
+        // 5. Inicializa a Aplicação
+        window.onload = function () {
+            initializeContent();
+            
+            const mainContent = document.getElementById('leitura-completa');
+            
+            // 5.1. Desativa o menu de contexto (botão direito)
+            if (mainContent) {
+                mainContent.addEventListener('contextmenu', function (e) {
+                    e.preventDefault();
+                    console.log('Cópia desativada para proteger o conteúdo.');
+                });
+            }
+
+            // 5.2. Dissuasão de Captura de Tela (Blur ao mudar de aba/foco)
+            function handleVisibilityChange() {
+                if (mainContent) {
+                    if (document.hidden) {
+                        // Aplica o blur quando o usuário sai da aba
+                        mainContent.classList.add('blurred-content');
+                        console.log('Conteúdo temporariamente borrado devido à mudança de foco.');
+                    } else {
+                        // Remove o blur quando o usuário retorna à aba
+                        mainContent.classList.remove('blurred-content');
+                    }
+                }
+            }
+            document.addEventListener('visibilitychange', handleVisibilityChange);
+
+            // 5.3. Configura o bloqueio de teclas
+            document.addEventListener('keydown', blockKeys);
+            document.addEventListener('keyup', blockKeys);
+            
+            // 5.4. Configura a marca d'água dinâmica
+            setupWatermark();
+        };
+    </script>
+</body>
+</html>
