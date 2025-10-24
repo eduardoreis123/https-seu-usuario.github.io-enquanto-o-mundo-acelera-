@@ -54,7 +54,6 @@
         }
 
         /* --- REGRAS DE PROTEÇÃO DE CONTEÚDO --- */
-
         /* Garantir que o conteúdo de leitura tenha position: relative para o overlay funcionar */
         #leitura-completa {
             position: relative; /* FUNDAMENTAL para a marca d'água dinâmica */
@@ -62,8 +61,19 @@
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
+            /* CLASSE CSS PARA TRANSITION E VISIBILIDADE */
+            transition: opacity 0.5s ease-in-out, visibility 0.5s;
         }
-        
+        /* Classe para esconder o conteúdo */
+        .hidden-content {
+            opacity: 0;
+            visibility: hidden;
+            height: 0; /* Ajuda a remover o espaço no layout */
+            overflow: hidden;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
         /* Permite a seleção em elementos interativos */
         #accordion-segredos button {
             user-select: auto;
@@ -136,16 +146,17 @@
                     Este livro é para quem se sente perdido, cansado ou sobrecarregado pelo mundo moderno. 
                     Ele não promete fórmulas mágicas, mas oferece clareza e um caminho para recuperar o silêncio e a consciência de si.
                 </p>
-                <!-- Botão CTA (Dourado Suave) -->
-                <a href="#leitura-completa" class="inline-block bg-accent text-gray-900 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-yellow-700 transition duration-300 text-lg uppercase tracking-wider">
+                <!-- BOTÃO CTA MODIFICADO PARA CHAMAR A FUNÇÃO showContent() -->
+                <button onclick="showContent()" class="inline-block bg-accent text-gray-900 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-yellow-700 transition duration-300 text-lg uppercase tracking-wider">
                     Leia Agora
-                </a>
+                </button>
             </div>
         </div>
     </header>
 
     <!-- Main Content: A leitura do livro (Fundo Branco, Texto Preto) -->
-    <main id="leitura-completa" class="bg-white min-h-screen py-16 px-4 md:px-8 shadow-inner">
+    <!-- ADICIONAMOS A CLASSE "hidden-content" PARA ESCONDER A SEÇÃO INICIALMENTE -->
+    <main id="leitura-completa" class="bg-white min-h-screen py-16 px-4 md:px-8 shadow-inner hidden-content">
         
         <!-- CAMADA DE MARCA D'ÁGUA DINÂMICA -->
         <div id="watermark-overlay"></div> 
@@ -207,6 +218,20 @@
         const chapterContentSection = document.querySelector('.chapter-content');
         const secretsAccordion = document.getElementById('accordion-segredos');
         
+        // FUNÇÃO ADICIONADA: Mostra o conteúdo do livro e rola a página
+        function showContent() {
+            const readingSection = document.getElementById('leitura-completa');
+            if (readingSection) {
+                // 1. Remove a classe que esconde o conteúdo
+                readingSection.classList.remove('hidden-content');
+                
+                // 2. Rola a página suavemente até o início da seção de leitura
+                setTimeout(() => { // Pequeno delay para garantir que o layout foi ajustado
+                    readingSection.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+            }
+        }
+
         // 1. Inicializa o Conteúdo do Livro
         function initializeContent() {
             let contentHTML = '';
@@ -268,6 +293,7 @@
         // 3. Bloqueio de Teclas de Print/Desenvolvedor/Impressão
         function blockKeys(e) {
             const mainContent = document.getElementById('leitura-completa');
+            if (mainContent.classList.contains('hidden-content')) return; // Não protege se estiver escondido
             
             // 3.1. Bloqueia F12 (Dev Tools)
             if (e.key === 'F12' || e.keyCode === 123) {
@@ -292,7 +318,6 @@
             // 3.3. Bloqueia atalhos comuns de cópia/impressão (Ctrl/Cmd)
             if ((e.ctrlKey || e.metaKey)) { // Ctrl no Windows, Cmd no Mac
                 // Ctrl+C (Copy), Ctrl+U (View Source), Ctrl+P (Print)
-                // Ctrl+Shift+I (Inspect), Ctrl+Shift+J (Console)
                 if (e.key === 'c' || e.key === 'C' || e.key === 'u' || e.key === 'U' || e.key === 'p' || e.key === 'P' || 
                     (e.shiftKey && (e.key === 'i' || e.key === 'I' || e.key === 'j' || e.key === 'J'))) {
                     e.preventDefault();
@@ -326,6 +351,9 @@
             
             // Faz a marca d'água se mover levemente com o mouse
             document.addEventListener('mousemove', (e) => {
+                const readingSection = document.getElementById('leitura-completa');
+                if (readingSection.classList.contains('hidden-content')) return; // Só move se estiver visível
+
                 const rect = watermarkOverlay.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
@@ -356,6 +384,7 @@
             // 5.1. Desativa o menu de contexto (botão direito)
             if (mainContent) {
                 mainContent.addEventListener('contextmenu', function (e) {
+                    if (mainContent.classList.contains('hidden-content')) return;
                     e.preventDefault();
                     console.log('Cópia desativada para proteger o conteúdo.');
                 });
@@ -365,9 +394,11 @@
             function handleVisibilityChange() {
                 if (mainContent) {
                     if (document.hidden) {
-                        // Aplica o blur quando o usuário sai da aba
-                        mainContent.classList.add('blurred-content');
-                        console.log('Conteúdo temporariamente borrado devido à mudança de foco.');
+                         // Aplica o blur quando o usuário sai da aba e o conteúdo está visível
+                        if (!mainContent.classList.contains('hidden-content')) {
+                            mainContent.classList.add('blurred-content');
+                            console.log('Conteúdo temporariamente borrado devido à mudança de foco.');
+                        }
                     } else {
                         // Remove o blur quando o usuário retorna à aba
                         mainContent.classList.remove('blurred-content');
